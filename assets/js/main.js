@@ -32,6 +32,70 @@
     }
   }
 
+  function editStudent(id) {
+      // Fetch the student data using AJAX or pass the data directly from PHP
+      // For simplicity, let's assume the data is passed directly from PHP
+      var student = <?php echo json_encode($attendance); ?>.find(s => s.id == id);
+  
+      if (student) {
+          // Populate the edit modal fields
+          document.getElementById('edit_id').value = student.id;
+          document.getElementById('edit_full_name').value = student.full_name;
+          document.getElementById('edit_middle_name').value = student.middle_name;
+          document.getElementById('edit_last_name').value = student.last_name;
+          document.getElementById('edit_age').value = student.age;
+          document.getElementById('edit_position').value = student.position;
+          document.getElementById('edit_sex').value = student.sex;
+          document.getElementById('edit_timeout').value = student.timeout;
+      } else {
+          alert('Student data not found!');
+      }
+  }
+
+function deleteStudent(id) {
+    if (confirm('Are you sure you want to delete this student?')) {
+        fetch('delete_student.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${id}`
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Error deleting student.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting student.');
+        });
+    }
+}
+
+
+  <!-- JavaScript for Edit and Delete -->
+    (id) => {
+      // Fetch student data via AJAX and populate the edit modal
+      fetch(`get_student.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('edit_id').value = data.id;
+          document.getElementById('edit_student_id').value = data.student_id;
+          document.getElementById('edit_student_name').value = data.student_name;
+          document.getElementById('edit_timein').value = data.timein;
+          document.getElementById('edit_timeout').value = data.timeout;
+        });
+    }
+
+function deleteStudent(id) {
+    if (confirm('Are you sure you want to delete this student?')) {
+        fetch(`delete_student.php?id=${id}`, { method: 'POST' })
+            .then(response => location.reload());
+    }
+}
   /**
    * Easy on scroll event listener 
    */
