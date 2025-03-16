@@ -1,3 +1,33 @@
+<?php
+session_start(); // Start the session
+include('database/database.php'); // Include your database connection file
+
+// Handle registration form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get form data
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // Check if the username already exists
+    $sql = "SELECT * FROM users WHERE username = '$username'";
+    $result = mysqli_query($conn, $sql);
+
+    if (mysqli_num_rows($result) > 0) {
+        echo "<script>alert('Username already exists.');</script>";
+    } else {
+        // Insert new user into the database
+        $sql = "INSERT INTO users (username, password) VALUES ('$username', '$hashed_password')";
+        if (mysqli_query($conn, $sql)) {
+            echo "<script>alert('Registration successful! Please login.');</script>";
+            header("Location: login.php"); // Redirect to the login page
+            exit();
+        } else {
+            echo "<script>alert('Error registering user: " . mysqli_error($conn) . "');</script>";
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -64,7 +94,7 @@
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" method="POST" action="" novalidate>
                     <div class="col-12">
                       <label for="yourName" class="form-label">Your Name</label>
                       <input type="text" name="name" class="form-control" id="yourName" required>

@@ -1,3 +1,41 @@
+<?php
+session_start(); // Start the session
+include('database/database.php'); // Include your database connection file
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get form data
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
+
+    // Fetch user from the database
+    $sql = "SELECT * FROM users WHERE username = '$username'";
+    $result = mysqli_query($conn, $sql);
+
+    if (mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+
+        // Verify the password
+        if (password_verify($password, $user['password'])) {
+            // Login successful
+            $_SESSION['user_id'] = $user['id']; // Store user ID in session
+            $_SESSION['username'] = $user['username']; // Store username in session
+
+            // Redirect to index.php
+            header("Location: index.php");
+            exit();
+        } else {
+            // Invalid password
+            echo "<script>alert('Invalid password.'); window.location.href = 'login.php';</script>";
+            exit();
+        }
+    } else {
+        // User not found
+        echo "<script>alert('User not found.'); window.location.href = 'login.php';</script>";
+        exit();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -64,7 +102,7 @@
                     <p class="text-center small">Enter your username & password to login</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <form class="row g-3 needs-validation" method="POST" action="" novalidate>
 
                     <div class="col-12">
                       <label for="yourUsername" class="form-label">Username</label>
