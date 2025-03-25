@@ -266,3 +266,5 @@ $attendance = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <?php include('partials/footer.php'); ?>
 </body>
 </html>
+
+<!-- Jhazel Cruzet: sign in, Log in and logout functionality  --> 
