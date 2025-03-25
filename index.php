@@ -270,4 +270,5 @@ $attendance = mysqli_fetch_all($result, MYSQLI_ASSOC);
 <!-- Jhazel Cruzet: sign in, Log in and logout functionality  --> 
 <!-- Christian Bohol: add and delete student functionality -->  
 <!-- John Lloyd E. Escultura: Update student, made improvements to the sign out functionality -->
+<!-- Riona Monticalbo: Search query functionality --> 
  
